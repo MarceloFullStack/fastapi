@@ -1,0 +1,19 @@
+from fastapi import APIRouter, Depends, status
+from sqlalchemy import delete
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.api import deps
+from app.core.security.password import get_password_hash
+from app.models import User
+from app.schemas.requests import UserUpdatePasswordRequest
+from app.schemas.responses import UserResponse
+
+router = APIRouter()
+
+@router.get("/secure-endpoint")
+async def secure_endpoint(
+    current_user: User = Depends(deps.get_current_user),
+    session: AsyncSession = Depends(deps.get_session),
+) -> dict:
+    # Se esta linha for alcançada, significa que a autenticação foi bem-sucedida
+    return {"message": "Acesso autorizado"}
