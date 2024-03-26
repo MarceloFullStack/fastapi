@@ -24,36 +24,42 @@ router = APIRouter()
 
 ACCESS_TOKEN_RESPONSES: dict[int | str, dict[str, Any]] = {
     400: {
-        "description": "Invalid email or password",
-        "content": {
-            "application/json": {"example": {"detail": api_messages.PASSWORD_INVALID}}
+        'description': 'Invalid email or password',
+        'content': {
+            'application/json': {
+                'example': {'detail': api_messages.PASSWORD_INVALID}
+            }
         },
     },
 }
 
 REFRESH_TOKEN_RESPONSES: dict[int | str, dict[str, Any]] = {
     400: {
-        "description": "Refresh token expired or is already used",
-        "content": {
-            "application/json": {
-                "examples": {
-                    "refresh token expired": {
-                        "summary": api_messages.REFRESH_TOKEN_EXPIRED,
-                        "value": {"detail": api_messages.REFRESH_TOKEN_EXPIRED},
+        'description': 'Refresh token expired or is already used',
+        'content': {
+            'application/json': {
+                'examples': {
+                    'refresh token expired': {
+                        'summary': api_messages.REFRESH_TOKEN_EXPIRED,
+                        'value': {
+                            'detail': api_messages.REFRESH_TOKEN_EXPIRED
+                        },
                     },
-                    "refresh token already used": {
-                        "summary": api_messages.REFRESH_TOKEN_ALREADY_USED,
-                        "value": {"detail": api_messages.REFRESH_TOKEN_ALREADY_USED},
+                    'refresh token already used': {
+                        'summary': api_messages.REFRESH_TOKEN_ALREADY_USED,
+                        'value': {
+                            'detail': api_messages.REFRESH_TOKEN_ALREADY_USED
+                        },
                     },
                 }
             }
         },
     },
     404: {
-        "description": "Refresh token does not exist",
-        "content": {
-            "application/json": {
-                "example": {"detail": api_messages.REFRESH_TOKEN_NOT_FOUND}
+        'description': 'Refresh token does not exist',
+        'content': {
+            'application/json': {
+                'example': {'detail': api_messages.REFRESH_TOKEN_NOT_FOUND}
             }
         },
     },
@@ -61,16 +67,18 @@ REFRESH_TOKEN_RESPONSES: dict[int | str, dict[str, Any]] = {
 
 
 @router.post(
-    "/access-token",
+    '/access-token',
     response_model=AccessTokenResponse,
     responses=ACCESS_TOKEN_RESPONSES,
-    description="OAuth2 compatible token, get an access token for future requests using username and password",
+    description='OAuth2 compatible token, get an access token for future requests using username and password',
 )
 async def login_access_token(
     session: AsyncSession = Depends(deps.get_session),
     form_data: OAuth2PasswordRequestForm = Depends(),
 ) -> AccessTokenResponse:
-    user = await session.scalar(select(User).where(User.email == form_data.username))
+    user = await session.scalar(
+        select(User).where(User.email == form_data.username)
+    )
 
     if user is None:
         # this is naive method to not return early
@@ -92,7 +100,9 @@ async def login_access_token(
     refresh_token = RefreshToken(
         user_id=user.user_id,
         refresh_token=secrets.token_urlsafe(32),
-        exp=int(time.time() + get_settings().security.refresh_token_expire_secs),
+        exp=int(
+            time.time() + get_settings().security.refresh_token_expire_secs
+        ),
     )
     session.add(refresh_token)
     await session.commit()
@@ -106,10 +116,10 @@ async def login_access_token(
 
 
 @router.post(
-    "/refresh-token",
+    '/refresh-token',
     response_model=AccessTokenResponse,
     responses=REFRESH_TOKEN_RESPONSES,
-    description="OAuth2 compatible token, get an access token for future requests using refresh token",
+    description='OAuth2 compatible token, get an access token for future requests using refresh token',
 )
 async def refresh_token(
     data: RefreshTokenRequest,
@@ -145,7 +155,9 @@ async def refresh_token(
     refresh_token = RefreshToken(
         user_id=token.user_id,
         refresh_token=secrets.token_urlsafe(32),
-        exp=int(time.time() + get_settings().security.refresh_token_expire_secs),
+        exp=int(
+            time.time() + get_settings().security.refresh_token_expire_secs
+        ),
     )
     session.add(refresh_token)
     await session.commit()
@@ -159,16 +171,18 @@ async def refresh_token(
 
 
 @router.post(
-    "/register",
+    '/register',
     response_model=UserResponse,
-    description="Create new user",
+    description='Create new user',
     status_code=status.HTTP_201_CREATED,
 )
 async def register_new_user(
     new_user: UserCreateRequest,
     session: AsyncSession = Depends(deps.get_session),
 ) -> User:
-    user = await session.scalar(select(User).where(User.email == new_user.email))
+    user = await session.scalar(
+        select(User).where(User.email == new_user.email)
+    )
     if user is not None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,

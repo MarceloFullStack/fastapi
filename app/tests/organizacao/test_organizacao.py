@@ -1,5 +1,6 @@
-from httpx import AsyncClient
 from fastapi import status
+from httpx import AsyncClient
+
 from app.main import app
 
 
@@ -8,7 +9,7 @@ async def test_secure_endpoint_status_code(
     default_user_headers: dict[str, str],
 ) -> None:
     response = await client.get(
-        app.url_path_for("secure_endpoint"),
+        app.url_path_for('secure_endpoint'),
         headers=default_user_headers,
     )
 
@@ -20,8 +21,8 @@ async def test_secure_endpoint_response(
     default_user_headers: dict[str, str],
 ) -> None:
     response = await client.get(
-        app.url_path_for("secure_endpoint"),
+        app.url_path_for('secure_endpoint'),
         headers=default_user_headers,
     )
 
-    assert response.json() == {"message": "Acesso autorizado"}
+    assert response.json() == {'message': 'Acesso autorizado'}

@@ -6,12 +6,12 @@ from app.api.api_router import api_router, auth_router
 from app.core.config import get_settings
 
 app = FastAPI(
-    title="fastapi postgres api inicial 2024",
-    version="6.0.0",
+    title='fastapi postgres api inicial 2024',
+    version='6.0.0',
     # description="https://github.com/rafsaf/minimal-fastapi-postgres-template",
-    description="https://github.com/MarceloFullStack/fastapi",
-    openapi_url="/openapi.json",
-    docs_url="/",
+    description='https://github.com/MarceloFullStack/fastapi',
+    openapi_url='/openapi.json',
+    docs_url='/',
 )
 
 app.include_router(auth_router)
@@ -24,8 +24,8 @@ app.add_middleware(
         str(origin) for origin in get_settings().security.backend_cors_origins
     ],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=['*'],
+    allow_headers=['*'],
 )
 
 # Guards against HTTP Host Header attacks

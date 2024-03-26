@@ -11,7 +11,7 @@ from app.core import database_session
 from app.core.security.jwt import verify_jwt_token
 from app.models import User
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/access-token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/access-token')
 
 
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
@@ -25,7 +25,9 @@ async def get_current_user(
 ) -> User:
     token_payload = verify_jwt_token(token)
 
-    user = await session.scalar(select(User).where(User.user_id == token_payload.sub))
+    user = await session.scalar(
+        select(User).where(User.user_id == token_payload.sub)
+    )
 
     if user is None:
         raise HTTPException(

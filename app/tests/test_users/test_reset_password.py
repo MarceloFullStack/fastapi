@@ -13,9 +13,9 @@ async def test_reset_current_user_password_status_code(
     default_user_headers: dict[str, str],
 ) -> None:
     response = await client.post(
-        app.url_path_for("reset_current_user_password"),
+        app.url_path_for('reset_current_user_password'),
         headers=default_user_headers,
-        json={"password": "test_pwd"},
+        json={'password': 'test_pwd'},
     )
 
     assert response.status_code == status.HTTP_204_NO_CONTENT
@@ -28,13 +28,13 @@ async def test_reset_current_user_password_is_changed_in_db(
     session: AsyncSession,
 ) -> None:
     await client.post(
-        app.url_path_for("reset_current_user_password"),
+        app.url_path_for('reset_current_user_password'),
         headers=default_user_headers,
-        json={"password": "test_pwd"},
+        json={'password': 'test_pwd'},
     )
 
     user = await session.scalar(
         select(User).where(User.user_id == default_user.user_id)
     )
     assert user is not None
-    assert verify_password("test_pwd", user.hashed_password)
+    assert verify_password('test_pwd', user.hashed_password)

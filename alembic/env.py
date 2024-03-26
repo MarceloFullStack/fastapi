@@ -30,7 +30,9 @@ target_metadata = Base.metadata
 
 
 def get_database_uri() -> str:
-    return get_settings().sqlalchemy_database_uri.render_as_string(hide_password=False)
+    return get_settings().sqlalchemy_database_uri.render_as_string(
+        hide_password=False
+    )
 
 
 def run_migrations_offline() -> None:
@@ -50,7 +52,7 @@ def run_migrations_offline() -> None:
         url=url,
         target_metadata=target_metadata,
         literal_binds=True,
-        dialect_opts={"paramstyle": "named"},
+        dialect_opts={'paramstyle': 'named'},
         compare_type=True,
         compare_server_default=True,
     )
@@ -61,7 +63,9 @@ def run_migrations_offline() -> None:
 
 def do_run_migrations(connection: Connection | None) -> None:
     context.configure(
-        connection=connection, target_metadata=target_metadata, compare_type=True
+        connection=connection,
+        target_metadata=target_metadata,
+        compare_type=True,
     )
 
     with context.begin_transaction():
@@ -77,11 +81,11 @@ async def run_migrations_online() -> None:
     """
     configuration = config.get_section(config.config_ini_section)
     assert configuration
-    configuration["sqlalchemy.url"] = get_database_uri()
+    configuration['sqlalchemy.url'] = get_database_uri()
     connectable = AsyncEngine(
         engine_from_config(
             configuration,
-            prefix="sqlalchemy.",
+            prefix='sqlalchemy.',
             poolclass=pool.NullPool,
             future=True,
         )

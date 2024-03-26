@@ -25,21 +25,21 @@ PROJECT_DIR = Path(__file__).parent.parent.parent
 
 
 class Security(BaseModel):
-    jwt_issuer: str = "my-app"
+    jwt_issuer: str = 'my-app'
     jwt_secret_key: SecretStr
     jwt_access_token_expire_secs: int = 24 * 3600  # 1d
     refresh_token_expire_secs: int = 28 * 24 * 3600  # 28d
     password_bcrypt_rounds: int = 12
-    allowed_hosts: list[str] = ["localhost", "127.0.0.1"]
+    allowed_hosts: list[str] = ['localhost', '127.0.0.1']
     backend_cors_origins: list[AnyHttpUrl] = []
 
 
 class Database(BaseModel):
-    hostname: str = "postgres"
-    username: str = "postgres"
+    hostname: str = 'postgres'
+    username: str = 'postgres'
     password: SecretStr
     port: int = 5432
-    db: str = "postgres"
+    db: str = 'postgres'
 
 
 class Settings(BaseSettings):
@@ -50,7 +50,7 @@ class Settings(BaseSettings):
     @property
     def sqlalchemy_database_uri(self) -> URL:
         return URL.create(
-            drivername="postgresql+asyncpg",
+            drivername='postgresql+asyncpg',
             username=self.database.username,
             password=self.database.password.get_secret_value(),
             host=self.database.hostname,
@@ -59,9 +59,9 @@ class Settings(BaseSettings):
         )
 
     model_config = SettingsConfigDict(
-        env_file=f"{PROJECT_DIR}/.env",
+        env_file=f'{PROJECT_DIR}/.env',
         case_sensitive=False,
-        env_nested_delimiter="__",
+        env_nested_delimiter='__',
     )
 
 

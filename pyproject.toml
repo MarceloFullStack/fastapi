@@ -33,6 +33,9 @@ pytest-xdist = "^3.5.0"
 ruff = "^0.3.3"
 types-passlib = "^1.7.7.20240311"
 uvicorn = {extras = ["standard"], version = "^0.28.0"}
+taskipy = "^1.12.2"
+blue = "^0.9.1"
+isort = "^5.13.2"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
@@ -53,9 +56,28 @@ python_version = "3.12"
 strict = true
 
 [tool.ruff]
+line-length = 79
+exclude = ['.venv', 'migrations']
 target-version = "py312"
 
 [tool.ruff.lint]
 # pycodestyle, pyflakes, isort, pylint, pyupgrade
 ignore = ["E501"]
 select = ["E", "F", "I", "PL", "UP", "W"]
+
+[tool.isort]
+profile = "black"
+line_length = 79
+extend_skip = ['migrations']
+
+[tool.blue]
+extend-exclude = '(migrations/)'
+
+
+[tool.taskipy.tasks]
+lint = 'ruff . && blue --check . --diff && isort --check . --diff'
+format = 'blue .  && isort .'
+run = 'uvicorn app.main:app --reloadtask'
+pre_test = 'task lint'
+test = 'pytest -s -x --cov=fast_zero -vv'
+post_test = 'coverage html'

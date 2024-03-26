@@ -12,7 +12,7 @@ async def test_delete_current_user_status_code(
     default_user_headers: dict[str, str],
 ) -> None:
     response = await client.delete(
-        app.url_path_for("delete_current_user"),
+        app.url_path_for('delete_current_user'),
         headers=default_user_headers,
     )
 
@@ -26,7 +26,7 @@ async def test_delete_current_user_is_deleted_in_db(
     session: AsyncSession,
 ) -> None:
     await client.delete(
-        app.url_path_for("delete_current_user"),
+        app.url_path_for('delete_current_user'),
         headers=default_user_headers,
     )
 

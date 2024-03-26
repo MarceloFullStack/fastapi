@@ -1,10 +1,13 @@
 import time
-from jose import jwt, JWTError
+
 from fastapi import HTTPException, status
+from jose import JWTError, jwt
 from pydantic import BaseModel
+
 from app.core.config import get_settings
 
-JWT_ALGORITHM = "HS256"
+JWT_ALGORITHM = 'HS256'
+
 
 class JWTTokenPayload(BaseModel):
     iss: str
@@ -12,19 +15,21 @@ class JWTTokenPayload(BaseModel):
     exp: int
     iat: int
 
+
 class JWTToken(BaseModel):
     payload: JWTTokenPayload
     access_token: str
+
 
 def create_jwt_token(user_id: str) -> JWTToken:
     iat = int(time.time())
     exp = iat + get_settings().security.jwt_access_token_expire_secs
 
     token_payload = {
-        "iss": get_settings().security.jwt_issuer,
-        "sub": user_id,
-        "exp": exp,
-        "iat": iat,
+        'iss': get_settings().security.jwt_issuer,
+        'sub': user_id,
+        'exp': exp,
+        'iat': iat,
     }
 
     access_token = jwt.encode(
@@ -33,7 +38,10 @@ def create_jwt_token(user_id: str) -> JWTToken:
         algorithm=JWT_ALGORITHM,
     )
 
-    return JWTToken(payload=JWTTokenPayload(**token_payload), access_token=access_token)
+    return JWTToken(
+        payload=JWTTokenPayload(**token_payload), access_token=access_token
+    )
+
 
 def verify_jwt_token(token: str) -> JWTTokenPayload:
     try:
@@ -41,14 +49,12 @@ def verify_jwt_token(token: str) -> JWTTokenPayload:
             token=token,
             key=get_settings().security.jwt_secret_key.get_secret_value(),
             algorithms=[JWT_ALGORITHM],
-            options={"verify_signature": True},
+            options={'verify_signature': True},
         )
     except JWTError as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Token invalid: {e}",
+            detail=f'Token invalid: {e}',
         )
 
     return JWTTokenPayload(**raw_payload)
-
-
