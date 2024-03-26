@@ -36,6 +36,7 @@ uvicorn = {extras = ["standard"], version = "^0.28.0"}
 taskipy = "^1.12.2"
 blue = "^0.9.1"
 isort = "^5.13.2"
+ignr = "^2.2"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"

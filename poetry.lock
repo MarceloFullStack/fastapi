@@ -786,6 +786,17 @@ files = [
 ]
 
 [[package]]
+name = "ignr"
+version = "2.2"
+description = "Python command line client to download.gitignore templates from gitignore.io"
+optional = false
+python-versions = "*"
+files = [
+    {file = "ignr-2.2-py3-none-any.whl", hash = "sha256:e8b6276aedab79b066d795e6e4b3f7b4c5668b68bf50a6c4fbf2b0cd17dda1db"},
+    {file = "ignr-2.2.tar.gz", hash = "sha256:382a81be67a34538a11ff8ab69063419b388cc32f01b4ace599c3f1c06526df4"},
+]
+
+[[package]]
 name = "iniconfig"
 version = "2.0.0"
 description = "brain-dead simple config-ini parsing"
@@ -2042,4 +2053,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "7cfffc7b02a78cc36f77083095f8883164351b592e52b3f7183a7456709d7850"
+content-hash = "72797773fda12ec3e930d51b735079839fc1238913abbb9b373cedad8eb19e51"
